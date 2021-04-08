@@ -52,7 +52,6 @@ export function PurchaseForm({value, friends, buyStatus, onChange}: PurchaseForm
     }, [currentUser, friends])
 
     const handleBtnClick = useCallback((email: string) => {
-        debugger
         let updatedPurchase: Purchase = JSON.parse(JSON.stringify(value))
         if (!updatedPurchase.emails) updatedPurchase.emails = []
         if (EMAIL_REGEX.test(email)) {

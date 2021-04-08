@@ -56,7 +56,6 @@ export function Market() {
     const updatePurchase = useCallback((purchase: Purchase) => {
         const index = purchases.findIndex(({game}) => game.id === purchase.game.id);
         if (index !== -1 && purchases[index] !== purchase) {
-            console.log(purchases[index], purchase)
             const newPurchases = [...purchases];
             newPurchases.splice(index, 1, purchase);
             setPurchases(newPurchases);
@@ -102,10 +101,6 @@ export function Market() {
             console.error(error.stack);
         }
     }, [api, purchases]);
-
-    useEffect(() => {
-        console.log('purchases', purchases)
-    }, [purchases])
 
     return (
         <div className="market">
