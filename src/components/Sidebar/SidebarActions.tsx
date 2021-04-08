@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo, useState} from 'react';
 import {BuyStatus, Purchase} from '../../data/types';
 import {Button} from '../Common/Button';
 import {Price} from '../Common/Price';
@@ -14,6 +14,13 @@ interface SidebarActionsProps {
 }
 
 export function SidebarActions({purchases, buyStatus, onBuy}: SidebarActionsProps) {
+    const [ableToPurchase, setAbleToPurchase] = useState(true)
+    useMemo(() => {
+        setAbleToPurchase(true)
+        purchases.forEach(({emails, userIds}) => {
+            if (!emails?.length && !userIds?.length) setAbleToPurchase(false)
+        })
+    }, [purchases])
     if (!purchases.length) {
         return null;
     }
@@ -26,7 +33,7 @@ export function SidebarActions({purchases, buyStatus, onBuy}: SidebarActionsProp
     }, 0);
     return (
         <div className="sidebar__actions">
-            <Button onClick={onBuy} disabled={buyStatus === BuyStatus.inProgress}>
+            <Button onClick={onBuy} disabled={buyStatus === BuyStatus.inProgress || !ableToPurchase}>
                 Buy game{purchases.length > 1 ? `s` : null}
                 {price > 0 ? <span> for <Price>{price}</Price></span> : null}
             </Button>

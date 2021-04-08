@@ -1,0 +1,10 @@
+.purchase-form__badge {
+    position: relative;
+    top: -2px;
+    margin-left: 5px;
+    background-color: #e26d6d;
+    padding: 2px 7px;
+    font-size: 0.9rem;
+    color: #fff;
+    border-radius: 2px;
+}

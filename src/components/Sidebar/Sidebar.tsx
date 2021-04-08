@@ -1,5 +1,5 @@
 import React from 'react';
-import {BuyStatus, Purchase} from '../../data/types';
+import {BuyStatus, Purchase, UserShortInfo} from '../../data/types';
 import {SidebarUserName} from './SidebarUserName';
 import {SidebarActions} from './SidebarActions';
 import {SidebarStatus} from './SidebarStatus';
@@ -8,6 +8,7 @@ import './Sidebar.css';
 
 interface CartProps {
     purchases: Purchase[];
+    friends: UserShortInfo[];
     buyStatus: BuyStatus;
     onPurchaseChange: (purchase: Purchase) => void,
     onPurchaseDelete: (purchase: Purchase) => void,
@@ -15,13 +16,14 @@ interface CartProps {
     className?: string;
 }
 
-export function Sidebar({purchases, buyStatus, onPurchaseChange, onPurchaseDelete, onBuy, className}: CartProps) {
+export function Sidebar({purchases, friends, buyStatus, onPurchaseChange, onPurchaseDelete, onBuy, className}: CartProps) {
     return (
         <div className={`sidebar ${className || ''}`}>
             <SidebarUserName />
             {purchases.map((purchase) => (
                 <CartItem
                     purchase={purchase}
+                    friends={friends}
                     buyStatus={buyStatus}
                     onChange={onPurchaseChange}
                     onDelete={onPurchaseDelete}

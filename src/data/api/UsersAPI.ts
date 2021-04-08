@@ -11,7 +11,7 @@ export class UsersAPI extends GenericAPI {
         return USERS.find(user => user.id === CURRENT_USER_ID);
     }
 
-    async fetchFriends({userId}: {userId: UserShortInfo['id']}): Promise<UserShortInfo[]> {
+    async fetchFriends(userId: UserShortInfo['id']): Promise<UserShortInfo[]> {
         await this.pause(this.delay * 2);
         const friendIds: UserShortInfo['id'][] = [];
         USERS.forEach(user => {

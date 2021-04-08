@@ -32,6 +32,13 @@ export interface Purchase {
     acknowledgeInviteAge?: boolean;
 }
 
+export interface UserPurchaseAccess {
+    id: number;
+    name: string;
+    allowed: boolean;
+    errorReason?: string;
+}
+
 export enum BuyStatus {
     none,
     inProgress,

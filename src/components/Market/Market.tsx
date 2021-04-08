@@ -1,8 +1,8 @@
 import React, {useCallback, useContext, useEffect, useState} from 'react';
-import {BuyStatus, GameShortInfo, Purchase} from '../../data/types';
+import {BuyStatus, GameShortInfo, Purchase, UserShortInfo} from '../../data/types';
 import {GameList} from '../GameList/GameList';
 import {Sidebar} from '../Sidebar/Sidebar';
-import {APIContext} from '../Context';
+import {APIContext, CurrentUserContext} from '../Context';
 import {Header} from './Header';
 import './Market.css';
 
@@ -10,11 +10,25 @@ const SHOW_BUY_STATUS_TIMOUT = 3000;
 
 export function Market() {
     const api = useContext(APIContext);
+    const currentUser = useContext(CurrentUserContext)
 
     const [games, setGames] = useState<GameShortInfo[]>();
+    const [friends, setFriends] = useState<UserShortInfo[]>([]);
     useEffect( () => {
         api.games.fetchGames().then(setGames);
     }, [api]);
+    useEffect( () => {
+        if (currentUser) {
+            api.users.fetchFriends(currentUser.id).then( (users) => {
+                users.sort(function(a, b){
+                    if(a.name < b.name) return -1
+                    if(a.name > b.name) return 1
+                    return 0;
+                })
+                setFriends(users)
+            });
+        }
+    }, [currentUser]);
 
     const [buyStatus, setBuyStatus] = useState<BuyStatus>(BuyStatus.none);
     const [buyResultTimer, setBuyResultTimer] = useState<any>();
@@ -42,6 +56,7 @@ export function Market() {
     const updatePurchase = useCallback((purchase: Purchase) => {
         const index = purchases.findIndex(({game}) => game.id === purchase.game.id);
         if (index !== -1 && purchases[index] !== purchase) {
+            console.log(purchases[index], purchase)
             const newPurchases = [...purchases];
             newPurchases.splice(index, 1, purchase);
             setPurchases(newPurchases);
@@ -88,11 +103,16 @@ export function Market() {
         }
     }, [api, purchases]);
 
+    useEffect(() => {
+        console.log('purchases', purchases)
+    }, [purchases])
+
     return (
         <div className="market">
             <Header>Game Market</Header>
             <GameList games={games} onAddToCart={addToCart} purchases={purchases} />
             <Sidebar
+                friends={friends}
                 purchases={purchases}
                 buyStatus={buyStatus}
                 onPurchaseChange={updatePurchase}
